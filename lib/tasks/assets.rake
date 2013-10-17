@@ -18,7 +18,14 @@ namespace :half_pipe do
 
   task :generate_grunt_runner do
     paths = %W(#{half_pipe.cwd} node_modules .bin grunt)
-    half_pipe.grunt_runner = File.join(*paths)
+    grunt_path = Pathname(File.join(*paths)).expand_path
+
+    puts `ls ./`
+    puts `echo $PATH`
+    puts `which grunt`
+
+    # If grunt binary isn't found assumes that is on PATH
+    half_pipe.grunt_runner = grunt_path.exist? ? grunt_path : paths.last
   end
 
   task :environment do
